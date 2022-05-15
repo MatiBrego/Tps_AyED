@@ -17,5 +17,8 @@ public class Match {
         return this.result;
     }
 
+    public boolean playsHome(Team team){return team == home;}
+
+    public boolean playsVisitor(Team team){return team == visitor;}
 
 }

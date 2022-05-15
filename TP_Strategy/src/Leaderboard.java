@@ -21,6 +21,17 @@ public class Leaderboard {
         return matches.length;
     }
 
+    public int getTotalPoints(){
+        int points = 0;
+        for(int i=0; i< teams.length; i++){
+            points = points+ teams[i].getPoints();
+        }
+        return points;
+    }
+
+
+
+
     public Team[] getTeams() {
         return teams;
     }

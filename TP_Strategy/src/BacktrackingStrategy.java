@@ -2,7 +2,7 @@ public class BacktrackingStrategy extends Strategy {
 
 
     @Override
-    public Match[] solve(Leaderboard leaderboard) {
-        return new Match[0];
+        public String solve(Leaderboard leaderboard) {
+        return "1";
     }
 }

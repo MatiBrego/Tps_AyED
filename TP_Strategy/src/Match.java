@@ -12,4 +12,10 @@ public class Match {
     public boolean plays(Team team){
         return team== home || team == visitor;
     }
+
+    public int GetResult(){
+        return this.result;
+    }
+
+
 }

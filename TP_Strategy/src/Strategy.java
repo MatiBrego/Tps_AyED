@@ -1,4 +1,7 @@
 public abstract class Strategy {
-    public abstract Match[] solve();
+    public abstract String solve(Leaderboard leaderboard);
 
+    {
+
+    }
 }

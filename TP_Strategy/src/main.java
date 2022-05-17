@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class main {
 
     public static void main(String[]args){
@@ -23,8 +25,9 @@ public class main {
         Leaderboard tabla = new Leaderboard(teams, partidos);
         BruteForceStrategy prueba = new BruteForceStrategy();
         System.out.println(prueba.solve(tabla));
-        }
 
-
+        DivideAndConquerStrategy pruebaDivide = new DivideAndConquerStrategy();
+        System.out.println(pruebaDivide.solve(tabla));
     }
+}
 

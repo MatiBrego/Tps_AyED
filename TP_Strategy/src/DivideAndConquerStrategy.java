@@ -5,6 +5,8 @@ public class DivideAndConquerStrategy extends Strategy{
 
     @Override
     public String solve(Leaderboard leaderboard) {
+        //Primero se crea una lista con todos los resultados posibles por equipo, dejando un 3 en las posiciones
+        //correspondientes a los partidos que no sean jugados por ese equipo. Se llama a la funcion get_pos_by_team()
         ArrayList<String> totalResultList = new ArrayList<String>();
         for(Team team: leaderboard.getTeams()){
             ArrayList teamResults = new ArrayList();
@@ -13,6 +15,7 @@ public class DivideAndConquerStrategy extends Strategy{
                 totalResultList.add((String) result);
             }
         }
+        //Luego se cuenta que resultado es el que mas se repite, y se agrega ese resultado al String de resultado final.
         String final_result = "";
         for(int i = 0; i<leaderboard.getMatchQty(); i++){
             int count_ties = 0;
@@ -46,13 +49,15 @@ public class DivideAndConquerStrategy extends Strategy{
         return aux_stack;
     }
 
+    //Esta función genera una lista de resultados posibles para un solo equipo. cada resultado es un String,
+    // y cada posición es el resultado posible de un solo partido(0 empate, 1 gana local, 2 gana visitante).
     public ArrayList<String> get_pos_by_team(Leaderboard leaderboard, int current_match, Team team, ArrayList results_list, String results){
         Stack current_stack = buildStack();
         Match[] matches = leaderboard.getMatches();
-        if (matches.length -1 == current_match){
+        if (matches.length -1 == current_match){//Condicion de corte si se llega al ultimo equipo
             if (!matches[current_match].plays(team)){
                 results += "3";
-                if(validate_results_for_team(results, team, leaderboard))
+                if(validate_results_for_team(results, team, leaderboard))//Se valida que el resultado sume los puntos del equipo
                     results_list.add(results);
                 return results_list;
             }else{
@@ -60,14 +65,14 @@ public class DivideAndConquerStrategy extends Strategy{
                 while(!current_stack.isEmpty()){
                     results = parcial_results;
                     results += current_stack.peek();
-                    if(validate_results_for_team(results, team, leaderboard))
+                    if(validate_results_for_team(results, team, leaderboard))//Se valida que el resultado sume los puntos del equipo
                         results_list.add(results);
                     current_stack.pop();
                 }
                 return results_list;
 
             }
-        }else{
+        }else{//Se llama recursivamente a la función, pero para el siguiente partido, y al resultado se le agrega la posibilidad correspondiente
             if(!matches[current_match].plays(team)) {
                 results += "3";
                 results_list = get_pos_by_team(leaderboard, current_match + 1, team, results_list, results);
@@ -83,7 +88,7 @@ public class DivideAndConquerStrategy extends Strategy{
             }
         return results_list;
     }
-
+    //Esta función valida que el resultado obtenido en la función get_pos_by_team() sume la cantidad de puntos del equipo
     public boolean validate_results_for_team(String results, Team team, Leaderboard leaderboard){
         int point_sum = 0;
         for (int i = 0; i < results.length(); i++) {

@@ -10,7 +10,7 @@ public class Leaderboard {
     public Team getTeambyName(String teamName){
         Team team = null;
         for(int i=0; i < teams.length; i++){
-            if(teams[i].getName() == teamName){
+            if(teams[i].getName().equals(teamName)){
                 team = teams[i];
                 return team;
             }
@@ -30,6 +30,10 @@ public class Leaderboard {
     }
 
 
+
+    public Match[] GetMatches(){
+        return this.matches;
+    }
 
 
     public Team[] getTeams() {

@@ -1,6 +1,9 @@
+import java.nio.channels.Pipe;
+
 public class main {
 
-    public static void main(String[]args){
+    public static void main(String[] args) {
+
         Team Barcelona = new Team("Barcelona", 4);
         Team Madrid = new Team("Madrid", 4);
         Team Sevilla = new Team("Sevilla", 2);
@@ -23,8 +26,8 @@ public class main {
         Leaderboard tabla = new Leaderboard(teams, partidos);
         BruteForceStrategy prueba = new BruteForceStrategy();
         System.out.println(prueba.solve(tabla));
-        }
 
 
     }
 
+}

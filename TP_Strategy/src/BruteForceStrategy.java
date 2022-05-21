@@ -6,6 +6,40 @@ public class BruteForceStrategy extends Strategy{
         int match_qty = leaderboard.getMatchQty();
         return RecursivePossibilites(leaderboard, match_qty, "");
     }
+    /*
+    dddd
+ public String solve(Leaderboard leaderboard) {
+        int match_qty = leaderboard.getMatchQty();
+        int final_result = int[leaderboard.getMatchQty()]; [0,1,0],[0,1,1],[1,
+        while(!check(actual_result)){
+
+
+ public Sting add(int[], int i, int k){
+    if final_result[i] == 2{
+
+
+
+
+ }
+
+     */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     //hace los stacks con las tres posibilidaes de resultado en los partidos, 0 en caso de empate
     // 1 en caso de ganar el local y 2 en caso de ganar el visitante
@@ -23,6 +57,9 @@ public class BruteForceStrategy extends Strategy{
             if(check_total_points(results, leaderboard)){
                 String[] new_str = results.split("-");
                 for(int i=0; i< new_str.length; i++){
+                    if(new_str[i].equals("0")) {
+                        new_str[i] = "X";
+                    }
                     System.out.print(new_str[i] + "\t");
                 }
             }

@@ -21,19 +21,20 @@ public class BacktrackingStrategy extends Strategy {
         }
     }
 
-
+    // filterPossibilities filtra un ArrayList de resultados y te devuelve de ese Array los que verifican para ese equipo.
+    // como es llamado por el recursive solver , el ArrayList que se le pasa va a ser cada vez mas chico
     private ArrayList<String> filterPossibilities(Team team, ArrayList<String> matches, Leaderboard leaderboard) {
         ArrayList<String> newPossibilities = new ArrayList();
         for (int i = 0; i < matches.size(); i++) {
-            if (validate_results_for_team((String) matches.get(i),team,leaderboard)) {
+            if (validateResultByTeam((String) matches.get(i),team,leaderboard)) {
                 newPossibilities.add(matches.get(i));
             }
         }
         return newPossibilities;
     }
 
-
-    public boolean validate_results_for_team(String results, Team team, Leaderboard leaderboard){
+    //  validateResultByTeam  se le pasa un resultado y verifica si la cantidad de puntos concuerdan con las del leaderboard.
+    public boolean validateResultByTeam(String results, Team team, Leaderboard leaderboard){
         int point_sum = 0;
         for (int i = 0; i < results.length(); i++) {
             char test = results.charAt(i);
@@ -48,7 +49,7 @@ public class BacktrackingStrategy extends Strategy {
         return point_sum == team.getPoints();
     }
 
-
+    // buildStack crea una pila con los 3 posibles resultados para un equipo.
     public Stack buildStack(){
         Stack aux_stack = new Stack();
         aux_stack.push('0');
@@ -58,7 +59,7 @@ public class BacktrackingStrategy extends Strategy {
     }
 
 
-
+    // allPosibilities retorna un ArrayList con todos los posibles resultados de partidos.
     public ArrayList<String> allPosibiities(Match[] matches, int currentMatch, String currentResult, ArrayList<String> totalMatches) {
         Stack newPossibilities = buildStack();
         if (currentMatch == matches.length - 1) {

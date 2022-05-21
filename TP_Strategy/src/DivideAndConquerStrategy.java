@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Stack;
 import java.util.ArrayList;
 
@@ -5,44 +6,54 @@ public class DivideAndConquerStrategy extends Strategy{
 
     @Override
     public String solve(Leaderboard leaderboard) {
-        //Primero se crea una lista con todos los resultados posibles por equipo, dejando un 3 en las posiciones
-        //correspondientes a los partidos que no sean jugados por ese equipo. Se llama a la funcion get_pos_by_team()
-        ArrayList<String> totalResultList = new ArrayList<String>();
-        for(Team team: leaderboard.getTeams()){
-            ArrayList teamResults = new ArrayList();
-            teamResults = this.get_pos_by_team(leaderboard, 0, team, teamResults, "");
-            for(Object result: teamResults){
-                totalResultList.add((String) result);
-            }
-        }
-        //Luego se cuenta que resultado es el que mas se repite, y se agrega ese resultado al String de resultado final.
-        String final_result = "";
-        for(int i = 0; i<leaderboard.getMatchQty(); i++){
-            int count_ties = 0;
-            int count_local_wins = 0;
-            int count_away_wins = 0;
-            for(String match_result: totalResultList){
-                if(match_result.charAt(i) == '0')
-                    count_ties++;
-                else if(match_result.charAt(i) == '1')
-                    count_local_wins++;
-                else if(match_result.charAt(i) == '2')
-                    count_away_wins++;
-            }
-            int aux_max = Math.max(count_ties, count_away_wins);
-            int max = Math.max(aux_max, count_local_wins);
-            if(max == count_ties)
-                final_result += '0';
-            if(max == count_local_wins)
-                final_result += '1';
-            if(max == count_away_wins)
-                final_result += '2';
-        }
-        return final_result;
+        return divide(leaderboard, leaderboard.getTeams()).get(0);
+
     }
 
-    public Stack buildStack(){
-        Stack aux_stack = new Stack();
+    //Este metodo divide la cantidad de partidos hasta que quede un arreglo de 2 o de 1
+    //Si el arreglo es de 1, devuelve las posibilidades, si es de 2, devuelve las posibilidades que sean compatibles
+    //con ambos equipos del arreglo.
+    //Si el arreglo es mas grande que 2, llama recursivamente al metodo divide con las dos mitades del arreglo
+    //y devuelve los resultados compatibles entre esas mitades.
+    public ArrayList<String> divide(Leaderboard leaderboard,  Team[] teams){
+        if (teams.length == 2)
+            return compatibleResults(get_pos_by_team(leaderboard, 0, teams[0], new ArrayList<>(), ""), get_pos_by_team(leaderboard, 0, teams[1], new ArrayList<>(), ""));
+        if(teams.length == 1)
+            return get_pos_by_team(leaderboard, 0, teams[0], new ArrayList<>(), "");
+        else
+            return compatibleResults(divide(leaderboard, getFirstHalf(teams)), divide(leaderboard, getSecondHalf(teams)));
+    }
+
+    public ArrayList<String> compatibleResults(ArrayList<String> results_1, ArrayList<String> results_2){
+        ArrayList<String> results = new ArrayList<>();
+        String currentResult = "";
+        for(String result1: results_1){
+            for(String result2: results_2){
+                for (int i = 0; i < result1.length(); i++) {
+                    if (result1.charAt(i) == '3')
+                        currentResult += result2.charAt(i);
+                    else if (result2.charAt(i) == '3')
+                        currentResult += result1.charAt(i);
+                    else if(result1.charAt(i) == result2.charAt(i))
+                        currentResult += result1.charAt(i);
+                }
+                if(currentResult.length() == result1.length())
+                    results.add(currentResult);
+                currentResult = "";
+            }
+        }
+        return results;
+    }
+
+    public Team[] getFirstHalf(Team[] teams){
+        return Arrays.copyOfRange(teams, 0, teams.length/2);
+    }
+    public Team[] getSecondHalf(Team[] teams){
+        return Arrays.copyOfRange(teams, teams.length/2, teams.length);
+    }
+
+    public Stack<Character> buildStack(){
+        Stack<Character> aux_stack = new Stack<>();
         aux_stack.push('0');
         aux_stack.push('1');
         aux_stack.push('2');
@@ -51,6 +62,7 @@ public class DivideAndConquerStrategy extends Strategy{
 
     //Esta función genera una lista de resultados posibles para un solo equipo. cada resultado es un String,
     // y cada posición es el resultado posible de un solo partido(0 empate, 1 gana local, 2 gana visitante).
+    // Coloca un 3 en las posiciones correspondientes a partidos que ese equipo no juega
     public ArrayList<String> get_pos_by_team(Leaderboard leaderboard, int current_match, Team team, ArrayList results_list, String results){
         Stack current_stack = buildStack();
         Match[] matches = leaderboard.getMatches();
